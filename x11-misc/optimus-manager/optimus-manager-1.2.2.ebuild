@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python3_{5,6,7,8} )
 inherit distutils-r1 systemd
 
 DESCRIPTION="Management utility to handle GPU switching for Optimus laptops"
-HOMEPAGE="https://github.com/Askannz/optimus-manager"
+HOMEPAGE="https://github.com/anlorn/optimus-manager"
 
 if [[ ${PV} == 9999 ]]; then
 	inherit git-r3
@@ -46,15 +46,17 @@ src_install() {
 	doins modules/${PN}.conf
 	insinto /var/lib/${PN}
 	doins var/*
-	dobin scripts/*
+	into /
+	dosbin scripts/*
 	insinto /etc/${PN}
 	doins config/*
+	fperms 755 /etc/"${PN}"/{nvidia-disable.sh,nvidia-enable.sh,xsetup-intel.sh,xsetup-nvidia.sh}
 	if use sddm; then
 		insinto /etc/sddm.conf.d
 		doins login_managers/sddm/20-${PN}.conf
 	fi
 	if use lightdm; then
-		insinto /etc/lightdm.conf.d
+		insinto /etc/lightdm/lightdm.conf.d
 		doins login_managers/lightdm/20-${PN}.conf
 	fi
 	insinto /usr/share
